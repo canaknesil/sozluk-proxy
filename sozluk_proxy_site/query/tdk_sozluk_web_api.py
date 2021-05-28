@@ -1,115 +1,100 @@
 import requests as req
 
 
+signatures = {
+    'gts':        ['ara'],
+    'oneri':      ['soz'],
+    'yazim':      ['ara'],
+    'taramaId':   ['id_var'],
+    'gts_id':     ['id_var'],
+    'terim':      ['eser_ad', 'ara'],
+    'lehceler':   ['ara', 'lehce'],
+    'bati':       ['ara'],
+    'atasozu':    ['ara'],
+    'derleme':    ['ara'],
+    'hemsirelik': ['ara'],
+    'eczacilik':  ['ara'],
+    'metroloji':  ['ara'],
+    'tarama':     ['ara'],
+    'adlar':      ['ara'],
+    'adlar2':     ['ara', 'gore', 'cins'],
+    'kilavuz':    ['prm', 'ara'],
+    'etms':       ['ara'],
+}
+
+urls = {
+    'gts':        "https://sozluk.gov.tr/gts",
+    'oneri':      "https://sozluk.gov.tr/oneri",
+    'yazim':      "https://sozluk.gov.tr/yazim",
+    'taramaId':   "https://sozluk.gov.tr/taramaId",
+    'gts_id':     "https://sozluk.gov.tr/gts_id",
+    'terim':      "https://sozluk.gov.tr/terim",
+    'lehceler':   "https://sozluk.gov.tr/lehceler",
+    'bati':       "https://sozluk.gov.tr/bati",
+    'atasozu':    "https://sozluk.gov.tr/atasozu",
+    'derleme':    "https://sozluk.gov.tr/derleme",
+    'hemsirelik': "https://sozluk.gov.tr/hemsirelik",
+    'eczacilik':  "https://sozluk.gov.tr/eczacilik",
+    'metroloji':  "https://sozluk.gov.tr/metroloji",
+    'tarama':     "https://sozluk.gov.tr/tarama",
+    'adlar':      "https://sozluk.gov.tr/adlar",
+    'adlar2':     "https://sozluk.gov.tr/adlar",
+    'kilavuz':    "https://sozluk.gov.tr/kilavuz",
+    'etms':       "https://sozluk.gov.tr/etms",
+}
+
+
+# TODO: Dictionary names
+
+
+def error_print(msg):
+    print("TDK: " + msg)
+
+
 def get_request(url, params):
     r = req.get(url=url, params=params)
     return r.json()
 
 
-### TDK SERVICE INTERFACE ###
+def query(parameters):
+    func = parameters.get('func')
+    if func is None:
+        error_print("No 'func' amoung parameters.")
+        return None
+    parameters.pop('func')
+
+    sig = signatures.get(func)
+    if sig is None:
+        error_print(func + "' not found in signatures.")
+        return None
+    if sig != list(parameters.keys()):
+        error_print("Signature of '" + func + "' does not match. Got " + str(list(parameters.keys())) + ". Should be " + str(sig))
+        return None
+
+    response = get_request(urls[func], parameters)
+    return response
+    
 
 
-### TODO ADD DICTIONARY NAMES
 
-
-def gts(ara):
-    return get_request("https://sozluk.gov.tr/gts",
-                       {'ara': ara})
-
-def oneri(soz):
-    return get_request("https://sozluk.gov.tr/oneri",
-                       {'soz': soz})
-
-def yazim(ara):
-    return get_request("https://sozluk.gov.tr/yazim",
-                       {'ara': ara})
-
-def taramaId(id_var):
-    return get_request("https://sozluk.gov.tr/taramaId",
-                       {'id': id_var})
-
-def gts_id(id_var):
-    return get_request("https://sozluk.gov.tr/gts_id",
-                       {'id': id_var})
-
-def terim(eser_ad, ara):
-    return get_request("https://sozluk.gov.tr/terim",
-                       {'eser_ad': eser_ad,
-                        'ara': ara})
-
-def lehceler(ara, lehce):
-    return get_request("https://sozluk.gov.tr/lehceler",
-                       {'ara': ara,
-                        'lehce': lehce})
-
-def bati(ara):
-    return get_request("https://sozluk.gov.tr/bati",
-                       {'ara': ara})
-
-def atasozu(ara):
-    return get_request("https://sozluk.gov.tr/atasozu",
-                       {'ara': ara})
-
-def derleme(ara):
-    return get_request("https://sozluk.gov.tr/derleme",
-                       {'ara': ara})
-
-def hemsirelik(ara):
-    return get_request("https://sozluk.gov.tr/hemsirelik",
-                       {'ara': ara})
-
-def eczacilik(ara):
-    return get_request("https://sozluk.gov.tr/eczacilik",
-                       {'ara': ara})
-
-def metroloji(ara):
-    return get_request("https://sozluk.gov.tr/metroloji",
-                       {'ara': ara})
-
-def tarama(ara):
-    return get_request("https://sozluk.gov.tr/tarama",
-                       {'ara': ara})
-
-def adlar(ara):
-    return get_request("https://sozluk.gov.tr/adlar",
-                       {'ara': ara})
-
-def adlar2(ara, gore, cins):
-    return get_request("https://sozluk.gov.tr/adlar",
-                       {'ara': ara,
-                        'gore': gore,
-                        'cins': cins})
-
-def kilavuz(prm, ara):
-    return get_request("https://sozluk.gov.tr/kilavuz",
-                       {'prm': prm,
-                        'ara': ara})
-
-def etms(ara):
-    return get_request("https://sozluk.gov.tr/etms",
-                       {'ara': ara})
-
-
-### TEST ###
-
-def test_func(name, out):
-    print("TEST " + name)
+def test_func(parameters):
+    print("TEST " + str(parameters))
     print("")
-    print(out)
+    print(query(parameters))
     print("")
 
 def test():
-    test_func("gts", gts("araba"))
-    test_func("oneri", oneri("araba"))
-    test_func("yazim", yazim("araba"))
-    test_func("taramaId", taramaId("1111"))
-    test_func("gts_id", gts_id("1111"))
-    test_func("terim", terim("tümü", "ivme"))
-    test_func("terim 2", terim("Fizik Terimleri Sözlüğü", "ivme"))
+    test_func({'func': 'gts', 'ara': "araba"})
+    test_func({'func': 'oneri', 'soz': "araba"})
+    test_func({'func': 'yazim', 'ara': "araba"})
+    test_func({'func': 'taramaId', 'id_var': "1111"})
+    test_func({'func': 'gts_id', 'id_var': "1111"})
+    test_func({'func': 'terim', 'eser_ad': "tümü", 'ara': "ivme"})
+    test_func({'func': 'terim', 'eser_ad': "Fizik Terimleri Sözlüğü", 'ara': "ivme"})
 
     # TODO rest
 
-    test_func("adlar", adlar("can"))
+    #test_func("adlar", adlar("can"))
 
 if __name__ == "__main__":
     test()

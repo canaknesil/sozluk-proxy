@@ -3,7 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    path('gts/', views.gts, name='gts'),
+    path('', views.query, name='query'),
 ]
 
 
