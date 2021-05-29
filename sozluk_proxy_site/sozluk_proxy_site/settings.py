@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-yy^ipqxtkt*pjczqj00(t95e44z_or_k%s)ki5agz4_uqrxeey
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sozlukproxy.canaknesil.com']
+ALLOWED_HOSTS = ['sozlukproxy.canaknesil.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -129,8 +129,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # corsheaders
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 # CORS_ALLOWED_ORIGINS = [
 #     "http://sozluk.canaknesil.com",
+#     "htpp://127.0.0.1",
 # ]
 

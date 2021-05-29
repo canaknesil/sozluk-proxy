@@ -6,5 +6,5 @@ Türkçe sözlük uygulamaları için web servisi.
 
 - django
 - requests
-
+- django-cors-headers
 

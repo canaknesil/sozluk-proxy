@@ -1,7 +1,7 @@
 import requests as req
 
 
-signatures = {
+tdk_signatures = {
     'gts':        ['ara'],
     'oneri':      ['soz'],
     'yazim':      ['ara'],
@@ -22,7 +22,7 @@ signatures = {
     'etms':       ['ara'],
 }
 
-urls = {
+tdk_urls = {
     'gts':        "https://sozluk.gov.tr/gts",
     'oneri':      "https://sozluk.gov.tr/oneri",
     'yazim':      "https://sozluk.gov.tr/yazim",
@@ -56,14 +56,14 @@ def get_request(url, params):
     return r.json()
 
 
-def query(parameters):
+def tdk_query(parameters):
     func = parameters.get('func')
     if func is None:
         error_print("No 'func' amoung parameters.")
         return None
     parameters.pop('func')
 
-    sig = signatures.get(func)
+    sig = tdk_signatures.get(func)
     if sig is None:
         error_print(func + "' not found in signatures.")
         return None
@@ -71,9 +71,30 @@ def query(parameters):
         error_print("Signature of '" + func + "' does not match. Got " + str(list(parameters.keys())) + ". Should be " + str(sig))
         return None
 
-    response = get_request(urls[func], parameters)
+    response = get_request(tdk_urls[func], parameters)
     return response
-    
+
+
+def translate_tdk_response(response):
+    # Uncompress property list for senses.
+    for definition in response:
+        curr_property_3 = None
+        for sense in definition['anlamlarListe']:
+            if not sense.get('ozelliklerListe'):
+                sense['ozelliklerListe'] = []
+            prop_3 = list(filter(lambda prop: prop['tur'] == "3", sense['ozelliklerListe']))
+            assert(len(prop_3) <= 1)
+            if len(prop_3) == 1:
+                curr_property_3 = prop_3[0]
+            else:
+                sense['ozelliklerListe'].append(curr_property_3)
+
+    return response
+
+
+def query(parameters):
+    tdk_response = tdk_query(parameters)
+    return translate_tdk_response(tdk_response)
 
 
 
