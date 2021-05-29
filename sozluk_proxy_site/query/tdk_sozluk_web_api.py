@@ -78,18 +78,16 @@ def tdk_query(parameters):
 def translate_tdk_response(response):
     # Uncompress property list for senses.
     for definition in response:
-        curr_property_3 = None
+        curr_property_3 = []
         for sense in definition['anlamlarListe']:
             if not sense.get('ozelliklerListe'):
                 sense['ozelliklerListe'] = []
             prop_3 = list(filter(lambda prop: prop['tur'] == "3", sense['ozelliklerListe']))
-            if sense['fiil'] == "0":
-                assert(len(prop_3) <= 1)
-                if len(prop_3) == 1:
-                    curr_property_3 = prop_3[0]
-                else:
-                    if curr_property_3 is not None:
-                        sense['ozelliklerListe'].append(curr_property_3)
+            if len(prop_3) > 0:
+                curr_property_3 += prop_3
+            else:
+                if len(curr_property_3) > 0 :
+                    sense['ozelliklerListe'] += curr_property_3
 
     return response
 
