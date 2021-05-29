@@ -84,7 +84,7 @@ def translate_tdk_response(response):
                 sense['ozelliklerListe'] = []
             prop_3 = list(filter(lambda prop: prop['tur'] == "3", sense['ozelliklerListe']))
             if len(prop_3) > 0:
-                curr_property_3 += prop_3
+                curr_property_3 = prop_3
             else:
                 if len(curr_property_3) > 0 :
                     sense['ozelliklerListe'] += curr_property_3
