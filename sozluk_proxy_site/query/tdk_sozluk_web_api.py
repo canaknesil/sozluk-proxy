@@ -88,7 +88,8 @@ def translate_tdk_response(response):
                 if len(prop_3) == 1:
                     curr_property_3 = prop_3[0]
                 else:
-                    sense['ozelliklerListe'].append(curr_property_3)
+                    if curr_property_3 is not None:
+                        sense['ozelliklerListe'].append(curr_property_3)
 
     return response
 
