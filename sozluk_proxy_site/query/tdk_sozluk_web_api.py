@@ -78,7 +78,10 @@ def tdk_query(parameters):
 def translate_tdk_response(response):
     # Uncompress property list for senses.
     for definition in response:
-        first_property_3 = list(filter(lambda p: p.get('tur') == "3", definition['anlamlarListe'][0]['ozelliklerListe']))
+        if definition['anlamlarListe'][0].get('ozelliklerListe'):
+            first_property_3 = list(filter(lambda p: p.get('tur') == "3", definition['anlamlarListe'][0]['ozelliklerListe']))
+        else:
+            first_property_3 = []
         for sense in definition['anlamlarListe']:
             if not sense.get('ozelliklerListe'):
                 sense['ozelliklerListe'] = []
