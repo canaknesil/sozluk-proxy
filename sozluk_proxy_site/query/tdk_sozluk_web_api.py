@@ -61,6 +61,7 @@ def tdk_query(parameters):
     if func is None:
         error_print("No 'func' amoung parameters.")
         return None
+    parameters = parameters.copy()
     parameters.pop('func')
 
     sig = tdk_signatures.get(func)
@@ -75,7 +76,7 @@ def tdk_query(parameters):
     return response
 
 
-def translate_tdk_response(response):
+def translate_tdk_definitions(response):
     # Uncompress property list for senses.
     for definition in response:
         if definition['anlamlarListe'][0].get('ozelliklerListe'):
@@ -101,7 +102,12 @@ def query(parameters):
             return None
         else:
             return None
-    return translate_tdk_response(tdk_response)
+
+    # For now, only supporting gts and oneri.
+    if parameters['func'] == 'oneri':
+        return tdk_response
+    else:
+        return translate_tdk_definitions(tdk_response)
 
 
 
